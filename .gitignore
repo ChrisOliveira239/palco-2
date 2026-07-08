@@ -1,0 +1,36 @@
+# --- Node (palco-admin, palco-frontend, root) ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# --- PHP / Laravel (palco-backend) ---
+vendor/
+palco-backend/.env
+palco-backend/storage/*.key
+palco-backend/bootstrap/cache/*.php
+palco-backend/storage/framework/cache/*
+palco-backend/storage/framework/sessions/*
+palco-backend/storage/framework/views/*
+palco-backend/storage/logs/*.log
+
+# --- Env files (qualquer pasta) ---
+.env
+.env.*
+!.env.example
+
+# --- Playwright ---
+/test-results/
+/playwright-report/
+/e2e/test-results/
+/e2e/playwright-report/
+/e2e/playwright/.cache/
+blob-report/
+
+# --- Editor / OS ---
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp

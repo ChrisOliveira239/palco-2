@@ -1,0 +1,16 @@
+{
+  "name": "palco",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "concurrently -n backend,admin,frontend -c blue,magenta,green \"npm:dev:backend\" \"npm:dev:admin\" \"npm:dev:frontend\"",
+    "dev:backend": "php palco-backend/artisan serve --host=127.0.0.1 --port=8000",
+    "dev:admin": "npm run dev --prefix palco-admin -- --port 5173",
+    "dev:frontend": "npm run dev --prefix palco-frontend -- --port 5174",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "concurrently": "^9.2.3"
+  }
+}
