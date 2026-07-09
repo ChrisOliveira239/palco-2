@@ -3,8 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
+use App\Models\Concerns\HasActiveFlag;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -12,7 +15,9 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasActiveFlag, HasApiTokens, HasFactory, Notifiable;
+
+    protected string $activeColumn = 'usu_active';
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +28,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'usu_role',
     ];
 
     /**
@@ -45,6 +51,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'usu_role' => UserRole::class,
+            'usu_active' => 'boolean',
         ];
+    }
+
+    public function interestedCities(): BelongsToMany
+    {
+        return $this->belongsToMany(City::class, 'city_user', 'int_user_id', 'int_city_id');
+    }
+
+    public function favoriteEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_favorites', 'fav_user_id', 'fav_event_id');
     }
 }
