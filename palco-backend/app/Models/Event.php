@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
@@ -36,6 +37,11 @@ class Event extends Model
     public function sessions(): HasMany
     {
         return $this->hasMany(EventSession::class, 'ses_event_id');
+    }
+
+    public function favoritedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'event_favorites', 'fav_event_id', 'fav_user_id');
     }
 
     public function scopeInCities(Builder $query, array $cityIds): Builder

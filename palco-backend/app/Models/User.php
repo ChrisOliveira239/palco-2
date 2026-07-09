@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(City::class, 'city_user', 'int_user_id', 'int_city_id');
     }
+
+    public function favoriteEvents(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class, 'event_favorites', 'fav_user_id', 'fav_event_id');
+    }
 }
