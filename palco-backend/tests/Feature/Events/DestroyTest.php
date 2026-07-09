@@ -21,7 +21,7 @@ class DestroyTest extends TestCase
         $response = $this->deleteJson("/api/events/{$event->id}");
 
         $response->assertNoContent();
-        $this->assertDatabaseMissing('events', ['id' => $event->id]);
+        $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => false]);
     }
 
     public function test_non_admin_cannot_delete_event(): void
@@ -33,7 +33,7 @@ class DestroyTest extends TestCase
         $response = $this->deleteJson("/api/events/{$event->id}");
 
         $response->assertStatus(403);
-        $this->assertDatabaseHas('events', ['id' => $event->id]);
+        $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => true]);
     }
 
     public function test_deleting_already_deleted_event_returns_404(): void

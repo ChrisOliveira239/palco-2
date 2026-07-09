@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PricingType;
+use App\Models\Concerns\HasActiveFlag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,7 +11,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EventSession extends Model
 {
-    use HasFactory;
+    use HasActiveFlag, HasFactory;
+
+    protected string $activeColumn = 'ses_active';
 
     protected $fillable = [
         'ses_event_id',
@@ -28,6 +31,7 @@ class EventSession extends Model
             'ses_end_at' => 'datetime',
             'ses_pricing_type' => PricingType::class,
             'ses_price' => 'decimal:2',
+            'ses_active' => 'boolean',
         ];
     }
 

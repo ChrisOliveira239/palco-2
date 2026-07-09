@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\UserRole;
+use App\Models\Concerns\HasActiveFlag;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,7 +15,9 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasActiveFlag, HasApiTokens, HasFactory, Notifiable;
+
+    protected string $activeColumn = 'usu_active';
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +52,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'usu_role' => UserRole::class,
+            'usu_active' => 'boolean',
         ];
     }
 

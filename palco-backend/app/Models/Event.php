@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasActiveFlag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Event extends Model
 {
-    use HasFactory;
+    use HasActiveFlag, HasFactory;
+
+    protected string $activeColumn = 'eve_active';
+
+    protected function casts(): array
+    {
+        return [
+            'eve_active' => 'boolean',
+        ];
+    }
 
     protected $fillable = [
         'eve_title',
