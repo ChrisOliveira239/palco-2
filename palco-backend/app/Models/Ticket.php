@@ -18,12 +18,14 @@ class Ticket extends Model
         'ing_holder_email',
         'ing_user_id',
         'ing_purchased_at',
+        'ing_walk_in',
     ];
 
     protected function casts(): array
     {
         return [
             'ing_purchased_at' => 'datetime',
+            'ing_walk_in' => 'boolean',
         ];
     }
 

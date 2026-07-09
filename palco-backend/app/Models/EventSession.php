@@ -40,4 +40,13 @@ class EventSession extends Model
     {
         return $this->hasMany(Ticket::class, 'ing_session_id');
     }
+
+    public function hasAvailableCapacity(): bool
+    {
+        if ($this->ses_capacity === null) {
+            return true;
+        }
+
+        return $this->tickets()->count() < $this->ses_capacity;
+    }
 }

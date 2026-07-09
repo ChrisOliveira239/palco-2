@@ -5,6 +5,7 @@ use App\Http\Controllers\CityController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventFavoriteController;
 use App\Http\Controllers\EventSessionController;
+use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserCityController;
 use App\Http\Controllers\UserFavoriteController;
 use Illuminate\Http\Request;
@@ -38,6 +39,10 @@ Route::prefix('events')->group(function () {
 Route::prefix('event-sessions')->middleware('auth:sanctum')->group(function () {
     Route::put('/{eventSession}', [EventSessionController::class, 'update']);
     Route::delete('/{eventSession}', [EventSessionController::class, 'destroy']);
+
+    Route::get('/{eventSession}/tickets', [TicketController::class, 'index']);
+    Route::post('/{eventSession}/tickets', [TicketController::class, 'store']);
+    Route::post('/{eventSession}/tickets/manual', [TicketController::class, 'storeManual']);
 });
 
 Route::post('/register', [AuthController::class, 'register']);
