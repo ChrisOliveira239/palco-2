@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useCurrentUser, useLogout } from '../hooks'
 
 export function HomePage() {
@@ -15,6 +16,9 @@ export function HomePage() {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4">
       <p>Olá, {user?.name}</p>
+      <Link to="/eventos" className="text-blue-600 underline">
+        Eventos
+      </Link>
       <button
         type="button"
         onClick={() => logout()}

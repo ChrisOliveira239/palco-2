@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { HomePage } from '../features/auth/components/HomePage'
 import { LoginForm } from '../features/auth/components/LoginForm'
+import { EventsPage } from '../features/eventos/components/EventsPage'
 import { useAuth } from './AuthContext'
 
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -28,6 +29,14 @@ export function AppRoutes() {
         element={
           <RequireAuth>
             <HomePage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/eventos"
+        element={
+          <RequireAuth>
+            <EventsPage />
           </RequireAuth>
         }
       />

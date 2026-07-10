@@ -33,6 +33,16 @@ src/
 
 Evita `src/components`, `src/services`, `src/hooks` genéricos crescendo sem fim — quem mexe no módulo Eventos mexe só em `features/eventos`.
 
+## Componentes — reusar antes de criar
+
+Antes de implementar uma tela nova (lista, formulário, relatório):
+
+1. **Procurar primeiro** se já existe componente pronto em `shared/components/` (ou em outra feature, se fizer sentido reusar) — não escrever de novo o que já existe.
+2. **Se não existir**, avaliar se o pedaço em questão é candidato a componente reusável (paginação, tabela genérica, input de filtro, modal, etc.) *antes* de implementar a tela — nascer já em `shared/components/` se a resposta for sim, em vez de escrever solto na feature e extrair depois.
+3. **Criar componente local livremente** (dentro de `features/<recurso>/components/`) só quando for algo específico/isolado daquela tela — não força abstração em `shared/` pra algo que só uma tela usa.
+
+Toda tela de lista/CRUD nasce dividida por responsabilidade — nunca um arquivo monolítico com estado+fetch+filtros+tabela juntos: um componente "Page" (dono do estado e dos hooks de fetch) compõe `Filters` + `Table`/`List` + `Pagination` (esta última reusada de `shared/components/`, não recriada por tela).
+
 ## Dados de servidor: TanStack Query. Estado de UI: Context
 
 - **TanStack Query** cuida de toda chamada que busca/muta dado do backend (lista de eventos, criar evento, etc.) — ele já resolve cache, loading, erro, refetch. Não escrever `useEffect` + `fetch` manual pra isso.
