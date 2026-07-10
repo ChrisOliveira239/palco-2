@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Event;
+namespace App\Http\Requests\Admin\Event;
 
 use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;

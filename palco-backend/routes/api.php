@@ -2,12 +2,12 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CityController;
-use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventFavoriteController;
 use App\Http\Controllers\EventSessionController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserCityController;
 use App\Http\Controllers\UserFavoriteController;
+use App\Http\Controllers\Web\EventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +27,6 @@ Route::prefix('events')->group(function () {
     Route::get('/{event}/sessions', [EventSessionController::class, 'index']);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/', [EventController::class, 'store']);
-        Route::put('/{event}', [EventController::class, 'update']);
-        Route::delete('/{event}', [EventController::class, 'destroy']);
         Route::post('/{event}/sessions', [EventSessionController::class, 'store']);
         Route::post('/{event}/favorite', [EventFavoriteController::class, 'store']);
         Route::delete('/{event}/favorite', [EventFavoriteController::class, 'destroy']);
