@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Events;
+namespace Tests\Feature\Admin\Events;
 
 use App\Models\City;
 use App\Models\Event;
@@ -20,7 +20,7 @@ class UpdateTest extends TestCase
         $city = City::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->putJson("/api/events/{$event->id}", [
+        $response = $this->putJson("/api/admin/events/{$event->id}", [
             'title' => 'Novo título',
             'synopsis' => null,
             'type' => 'oficina',
@@ -40,7 +40,7 @@ class UpdateTest extends TestCase
         $city = City::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->putJson('/api/events/99999', [
+        $response = $this->putJson('/api/admin/events/99999', [
             'title' => 'Novo título',
             'type' => 'oficina',
             'venue_name' => 'Novo local',
@@ -57,7 +57,7 @@ class UpdateTest extends TestCase
         $city = City::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->putJson("/api/events/{$event->id}", [
+        $response = $this->putJson("/api/admin/events/{$event->id}", [
             'title' => 'Novo título',
             'type' => 'oficina',
             'venue_name' => 'Novo local',

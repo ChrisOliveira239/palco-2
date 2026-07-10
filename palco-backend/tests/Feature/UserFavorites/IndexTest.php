@@ -54,7 +54,7 @@ class IndexTest extends TestCase
         $event = Event::factory()->create();
         $event->favoritedBy()->attach($user->id);
         Sanctum::actingAs($admin);
-        $this->deleteJson("/api/events/{$event->id}")->assertNoContent();
+        $this->deleteJson("/api/admin/events/{$event->id}")->assertNoContent();
 
         Sanctum::actingAs($user);
         $response = $this->getJson('/api/user/favorites');

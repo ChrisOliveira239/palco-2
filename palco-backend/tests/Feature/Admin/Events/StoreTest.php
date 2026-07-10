@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Events;
+namespace Tests\Feature\Admin\Events;
 
 use App\Models\City;
 use App\Models\User;
@@ -18,7 +18,7 @@ class StoreTest extends TestCase
         $city = City::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson('/api/events', [
+        $response = $this->postJson('/api/admin/events', [
             'title' => 'Show de Rock',
             'synopsis' => 'Uma noite de rock.',
             'type' => 'show',
@@ -40,7 +40,7 @@ class StoreTest extends TestCase
         $city = City::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->postJson('/api/events', [
+        $response = $this->postJson('/api/admin/events', [
             'title' => 'Show de Rock',
             'type' => 'show',
             'venue_name' => 'Arena X',
@@ -54,7 +54,7 @@ class StoreTest extends TestCase
     {
         $city = City::factory()->create();
 
-        $response = $this->postJson('/api/events', [
+        $response = $this->postJson('/api/admin/events', [
             'title' => 'Show de Rock',
             'type' => 'show',
             'venue_name' => 'Arena X',
@@ -69,7 +69,7 @@ class StoreTest extends TestCase
         $admin = User::factory()->admin()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson('/api/events', []);
+        $response = $this->postJson('/api/admin/events', []);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['title', 'type', 'venue_name', 'city_id']);

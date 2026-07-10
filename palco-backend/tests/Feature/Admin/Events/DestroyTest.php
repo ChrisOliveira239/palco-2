@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Events;
+namespace Tests\Feature\Admin\Events;
 
 use App\Models\Event;
 use App\Models\User;
@@ -18,7 +18,7 @@ class DestroyTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->deleteJson("/api/events/{$event->id}");
+        $response = $this->deleteJson("/api/admin/events/{$event->id}");
 
         $response->assertNoContent();
         $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => false]);
@@ -30,7 +30,7 @@ class DestroyTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->deleteJson("/api/events/{$event->id}");
+        $response = $this->deleteJson("/api/admin/events/{$event->id}");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => true]);
@@ -42,7 +42,7 @@ class DestroyTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $this->deleteJson("/api/events/{$event->id}")->assertNoContent();
-        $this->deleteJson("/api/events/{$event->id}")->assertStatus(404);
+        $this->deleteJson("/api/admin/events/{$event->id}")->assertNoContent();
+        $this->deleteJson("/api/admin/events/{$event->id}")->assertStatus(404);
     }
 }

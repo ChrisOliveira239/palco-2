@@ -9,6 +9,7 @@ use App\Actions\Event\UpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Event\DestroyEventRequest;
 use App\Http\Requests\Admin\Event\IndexEventRequest;
+use App\Http\Requests\Admin\Event\ShowEventRequest;
 use App\Http\Requests\Admin\Event\StoreEventRequest;
 use App\Http\Requests\Admin\Event\UpdateEventRequest;
 use App\Http\Resources\EventResource;
@@ -25,6 +26,11 @@ class EventController extends Controller
         );
 
         return EventResource::collection($events);
+    }
+
+    public function show(ShowEventRequest $request, Event $event)
+    {
+        return new EventResource($event->load('city'));
     }
 
     public function store(StoreEventRequest $request, CreateEvent $createEvent)
