@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { HomePage } from '../features/auth/components/HomePage'
 import { LoginForm } from '../features/auth/components/LoginForm'
+import { EventFormPage } from '../features/eventos/components/EventFormPage'
 import { EventsPage } from '../features/eventos/components/EventsPage'
 import { useAuth } from './AuthContext'
 
@@ -37,6 +38,22 @@ export function AppRoutes() {
         element={
           <RequireAuth>
             <EventsPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/eventos/novo"
+        element={
+          <RequireAuth>
+            <EventFormPage />
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/eventos/:id/editar"
+        element={
+          <RequireAuth>
+            <EventFormPage />
           </RequireAuth>
         }
       />

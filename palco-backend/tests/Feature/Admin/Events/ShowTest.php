@@ -57,4 +57,16 @@ class ShowTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_admin_shows_inactive_event(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $event = Event::factory()->create(['eve_active' => false]);
+        Sanctum::actingAs($admin);
+
+        $response = $this->getJson("/api/admin/events/{$event->id}");
+
+        $response->assertOk();
+        $response->assertJsonPath('data.id', $event->id);
+    }
 }

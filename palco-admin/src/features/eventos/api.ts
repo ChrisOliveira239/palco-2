@@ -1,7 +1,7 @@
 import { apiClient } from '../../shared/api/client'
 import type { PaginatedResponse } from '../../shared/api/types'
 import type { City } from '../cities/types'
-import type { Event, EventFilters } from './types'
+import type { Event, EventFilters, EventFormValues } from './types'
 
 type EventApiResponse = {
   id: number
@@ -47,4 +47,33 @@ export function listEvents(filters: EventFilters) {
       data: response.data.data.map(toEvent),
       meta: response.data.meta,
     }))
+}
+
+export function getEvent(id: number) {
+  return apiClient
+    .get<{ data: EventApiResponse }>(`/admin/events/${id}`)
+    .then((response) => toEvent(response.data.data))
+}
+
+function toPayload(values: EventFormValues) {
+  return {
+    title: values.title,
+    synopsis: values.synopsis || null,
+    type: values.type,
+    venue_name: values.venueName,
+    city_id: values.cityId,
+    ticket_url: values.ticketUrl || null,
+  }
+}
+
+export function createEvent(values: EventFormValues) {
+  return apiClient
+    .post<{ data: EventApiResponse }>('/admin/events', toPayload(values))
+    .then((response) => toEvent(response.data.data))
+}
+
+export function updateEvent(id: number, values: EventFormValues) {
+  return apiClient
+    .put<{ data: EventApiResponse }>(`/admin/events/${id}`, toPayload(values))
+    .then((response) => toEvent(response.data.data))
 }

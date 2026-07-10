@@ -2,6 +2,8 @@ import type { City } from '../cities/types'
 
 export type EventStatus = 'active' | 'inactive' | 'all'
 
+export type EventType = 'show' | 'oficina' | 'exposicao'
+
 export type Event = {
   id: number
   title: string
@@ -21,4 +23,18 @@ export type EventFilters = {
   cityId?: number
   status?: EventStatus
   page?: number
+}
+
+export type EventFormValues = {
+  title: string
+  synopsis: string
+  type: EventType
+  venueName: string
+  cityId: number | undefined
+  ticketUrl: string
+}
+
+export type EventFormErrorResponse = {
+  message: string
+  errors?: Record<string, string[]>
 }

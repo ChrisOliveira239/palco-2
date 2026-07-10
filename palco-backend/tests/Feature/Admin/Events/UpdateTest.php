@@ -66,4 +66,22 @@ class UpdateTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_admin_updates_inactive_event(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $event = Event::factory()->create(['eve_active' => false]);
+        $city = City::factory()->create();
+        Sanctum::actingAs($admin);
+
+        $response = $this->putJson("/api/admin/events/{$event->id}", [
+            'title' => 'Novo título',
+            'type' => 'oficina',
+            'venue_name' => 'Novo local',
+            'city_id' => $city->id,
+        ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_title' => 'Novo título', 'eve_active' => false]);
+    }
 }

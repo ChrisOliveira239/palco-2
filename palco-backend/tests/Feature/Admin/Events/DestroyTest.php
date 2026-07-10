@@ -36,13 +36,14 @@ class DestroyTest extends TestCase
         $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => true]);
     }
 
-    public function test_deleting_already_deleted_event_returns_404(): void
+    public function test_deleting_already_deleted_event_is_idempotent(): void
     {
         $admin = User::factory()->admin()->create();
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
         $this->deleteJson("/api/admin/events/{$event->id}")->assertNoContent();
-        $this->deleteJson("/api/admin/events/{$event->id}")->assertStatus(404);
+        $this->deleteJson("/api/admin/events/{$event->id}")->assertNoContent();
+        $this->assertDatabaseHas('events', ['id' => $event->id, 'eve_active' => false]);
     }
 }
