@@ -19,6 +19,8 @@ class EventResource extends JsonResource
             'next_session_at' => $this->next_session_at,
             'ticket_url' => $this->eve_ticket_url,
             'poster_path' => $this->eve_poster_path,
+            'active' => $this->eve_active,
+            'sessions_count' => $this->sessions_count,
         ];
     }
 }

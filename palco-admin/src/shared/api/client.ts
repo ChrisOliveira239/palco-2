@@ -22,7 +22,8 @@ apiClient.interceptors.request.use((config) => {
 apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isLoginRequest = error.config?.url === '/login'
+    if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.removeItem(AUTH_STORAGE_KEY)
       window.location.href = '/login'
     }
