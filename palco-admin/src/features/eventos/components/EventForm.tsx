@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react'
-import { useCities } from '../../cities/hooks'
+import { CityAutocomplete } from '../../cities/components/CityAutocomplete'
+import type { City } from '../../cities/types'
 import type { EventFormValues, EventType } from '../types'
 
 const EMPTY_VALUES: EventFormValues = {
@@ -19,15 +20,23 @@ const TYPE_LABELS: Record<EventType, string> = {
 
 type EventFormProps = {
   initialValues?: EventFormValues
+  initialCity?: City
   onSubmit: (values: EventFormValues) => void
   isSubmitting: boolean
   errorMessage?: string
   fieldErrors?: Record<string, string[]>
 }
 
-export function EventForm({ initialValues, onSubmit, isSubmitting, errorMessage, fieldErrors }: EventFormProps) {
+export function EventForm({
+  initialValues,
+  initialCity,
+  onSubmit,
+  isSubmitting,
+  errorMessage,
+  fieldErrors,
+}: EventFormProps) {
   const [values, setValues] = useState<EventFormValues>(initialValues ?? EMPTY_VALUES)
-  const { data: cities } = useCities()
+  const [selectedCity, setSelectedCity] = useState<City | undefined>(initialCity)
 
   function fieldError(field: string) {
     return fieldErrors?.[field]?.[0]
@@ -104,21 +113,14 @@ export function EventForm({ initialValues, onSubmit, isSubmitting, errorMessage,
         <label htmlFor="cityId" className="text-sm font-medium">
           Cidade
         </label>
-        <select
-          id="cityId"
-          value={values.cityId ?? ''}
-          onChange={(event) =>
-            setValues({ ...values, cityId: event.target.value ? Number(event.target.value) : undefined })
-          }
-          className="rounded border border-gray-300 px-3 py-2"
-        >
-          <option value="">Selecione...</option>
-          {cities?.map((city) => (
-            <option key={city.id} value={city.id}>
-              {city.name}/{city.state}
-            </option>
-          ))}
-        </select>
+        <CityAutocomplete
+          value={selectedCity}
+          onChange={(city) => {
+            setSelectedCity(city)
+            setValues({ ...values, cityId: city?.id })
+          }}
+          placeholder="Selecione..."
+        />
         {fieldError('city_id') && <p className="text-sm text-red-600">{fieldError('city_id')}</p>}
       </div>
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\EventSessions;
+namespace Tests\Feature\Admin\EventSessions;
 
 use App\Models\EventSession;
 use App\Models\User;
@@ -18,7 +18,7 @@ class DestroyTest extends TestCase
         $session = EventSession::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->deleteJson("/api/event-sessions/{$session->id}");
+        $response = $this->deleteJson("/api/admin/event-sessions/{$session->id}");
 
         $response->assertNoContent();
         $this->assertDatabaseHas('event_sessions', ['id' => $session->id, 'ses_active' => false]);
@@ -30,7 +30,7 @@ class DestroyTest extends TestCase
         $session = EventSession::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->deleteJson("/api/event-sessions/{$session->id}");
+        $response = $this->deleteJson("/api/admin/event-sessions/{$session->id}");
 
         $response->assertStatus(403);
         $this->assertDatabaseHas('event_sessions', ['id' => $session->id, 'ses_active' => true]);
@@ -46,7 +46,7 @@ class DestroyTest extends TestCase
         ]);
         Sanctum::actingAs($admin);
 
-        $response = $this->deleteJson("/api/event-sessions/{$session->id}");
+        $response = $this->deleteJson("/api/admin/event-sessions/{$session->id}");
 
         $response->assertNoContent();
         $this->assertDatabaseHas('event_sessions', ['id' => $session->id, 'ses_active' => false]);
@@ -58,7 +58,16 @@ class DestroyTest extends TestCase
         $session = EventSession::factory()->create();
         Sanctum::actingAs($admin);
 
-        $this->deleteJson("/api/event-sessions/{$session->id}")->assertNoContent();
-        $this->deleteJson("/api/event-sessions/{$session->id}")->assertStatus(404);
+        $this->deleteJson("/api/admin/event-sessions/{$session->id}")->assertNoContent();
+        $this->deleteJson("/api/admin/event-sessions/{$session->id}")->assertStatus(404);
+    }
+
+    public function test_unauthenticated_cannot_delete_event_session(): void
+    {
+        $session = EventSession::factory()->create();
+
+        $response = $this->deleteJson("/api/admin/event-sessions/{$session->id}");
+
+        $response->assertStatus(401);
     }
 }

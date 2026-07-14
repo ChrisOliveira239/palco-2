@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useDebouncedValue } from '../../../shared/hooks/useDebouncedValue'
-import { useCities } from '../../cities/hooks'
+import { CityAutocomplete } from '../../cities/components/CityAutocomplete'
+import type { City } from '../../cities/types'
 import type { EventStatus } from '../types'
 
 const STATUS_LABELS: Record<EventStatus, string> = {
@@ -14,20 +15,13 @@ const SEARCH_DEBOUNCE_MS = 400
 
 type EventsFiltersProps = {
   onSearchChange: (search: string) => void
-  cityId: number | undefined
   onCityIdChange: (cityId: number | undefined) => void
   status: EventStatus
   onStatusChange: (status: EventStatus) => void
 }
 
-export function EventsFilters({
-  onSearchChange,
-  cityId,
-  onCityIdChange,
-  status,
-  onStatusChange,
-}: EventsFiltersProps) {
-  const { data: cities } = useCities()
+export function EventsFilters({ onSearchChange, onCityIdChange, status, onStatusChange }: EventsFiltersProps) {
+  const [selectedCity, setSelectedCity] = useState<City | undefined>(undefined)
   const [searchInput, setSearchInput] = useState('')
   const debouncedSearch = useDebouncedValue(searchInput, SEARCH_DEBOUNCE_MS)
 
@@ -46,18 +40,14 @@ export function EventsFilters({
         onChange={(event) => setSearchInput(event.target.value)}
         className="rounded border border-gray-300 px-3 py-2"
       />
-      <select
-        value={cityId ?? ''}
-        onChange={(event) => onCityIdChange(event.target.value ? Number(event.target.value) : undefined)}
-        className="rounded border border-gray-300 px-3 py-2"
-      >
-        <option value="">Todas as cidades</option>
-        {cities?.map((city) => (
-          <option key={city.id} value={city.id}>
-            {city.name}/{city.state}
-          </option>
-        ))}
-      </select>
+      <CityAutocomplete
+        value={selectedCity}
+        onChange={(city) => {
+          setSelectedCity(city)
+          onCityIdChange(city?.id)
+        }}
+        placeholder="Todas as cidades"
+      />
       <select
         value={status}
         onChange={(event) => onStatusChange(event.target.value as EventStatus)}

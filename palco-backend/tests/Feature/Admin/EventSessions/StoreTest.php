@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\EventSessions;
+namespace Tests\Feature\Admin\EventSessions;
 
 use App\Models\Event;
 use App\Models\User;
@@ -18,7 +18,7 @@ class StoreTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", [
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
             'start_at' => now()->addDays(5)->toDateTimeString(),
             'end_at' => null,
             'pricing_type' => 'fixed',
@@ -34,13 +34,28 @@ class StoreTest extends TestCase
         $this->assertDatabaseHas('event_sessions', ['ses_event_id' => $event->id, 'ses_capacity' => 100]);
     }
 
+    public function test_admin_creates_session_for_inactive_event(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $event = Event::factory()->create(['eve_active' => false]);
+        Sanctum::actingAs($admin);
+
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
+            'start_at' => now()->addDays(5)->toDateTimeString(),
+            'pricing_type' => 'free',
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('event_sessions', ['ses_event_id' => $event->id]);
+    }
+
     public function test_non_admin_cannot_create_event_session(): void
     {
         $user = User::factory()->create();
         $event = Event::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", [
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
             'start_at' => now()->addDays(5)->toDateTimeString(),
             'pricing_type' => 'free',
         ]);
@@ -52,7 +67,7 @@ class StoreTest extends TestCase
     {
         $event = Event::factory()->create();
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", [
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
             'start_at' => now()->addDays(5)->toDateTimeString(),
             'pricing_type' => 'free',
         ]);
@@ -66,7 +81,7 @@ class StoreTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", []);
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", []);
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['start_at', 'pricing_type']);
@@ -78,7 +93,7 @@ class StoreTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", [
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
             'start_at' => now()->addDays(5)->toDateTimeString(),
             'pricing_type' => 'fixed',
         ]);
@@ -93,7 +108,7 @@ class StoreTest extends TestCase
         $event = Event::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->postJson("/api/events/{$event->id}/sessions", [
+        $response = $this->postJson("/api/admin/events/{$event->id}/sessions", [
             'start_at' => now()->addDays(5)->toDateTimeString(),
             'end_at' => now()->addDays(4)->toDateTimeString(),
             'pricing_type' => 'free',

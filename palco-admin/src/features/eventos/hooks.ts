@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import type { AxiosError } from 'axios'
-import { createEvent, getEvent, listEvents, updateEvent } from './api'
+import { createEvent, deactivateEvent, getEvent, listEvents, reactivateEvent, updateEvent } from './api'
 import type { Event, EventFilters, EventFormErrorResponse, EventFormValues } from './types'
 
 export function useAdminEvents(filters: EventFilters) {
@@ -36,6 +36,28 @@ export function useUpdateEvent(id: number) {
 
   return useMutation<Event, AxiosError<EventFormErrorResponse>, EventFormValues>({
     mutationFn: (values) => updateEvent(id, values),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'events'] })
+    },
+  })
+}
+
+export function useDeactivateEvent() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: deactivateEvent,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'events'] })
+    },
+  })
+}
+
+export function useReactivateEvent() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: reactivateEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'events'] })
     },

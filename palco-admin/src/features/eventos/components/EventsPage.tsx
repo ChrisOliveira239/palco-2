@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Pagination } from '../../../shared/components/Pagination'
-import { useAdminEvents } from '../hooks'
+import { useAdminEvents, useDeactivateEvent, useReactivateEvent } from '../hooks'
 import type { EventStatus } from '../types'
 import { EventsFilters } from './EventsFilters'
 import { EventsTable } from './EventsTable'
@@ -23,6 +23,17 @@ export function EventsPage() {
     page,
   })
 
+  const deactivateEvent = useDeactivateEvent()
+  const reactivateEvent = useReactivateEvent()
+
+  function handleDeactivate(id: number) {
+    deactivateEvent.mutate(id)
+  }
+
+  function handleReactivate(id: number) {
+    reactivateEvent.mutate(id)
+  }
+
   return (
     <div className="p-6">
       <div className="mb-4 flex items-center justify-between">
@@ -32,20 +43,14 @@ export function EventsPage() {
         </Link>
       </div>
 
-      <EventsFilters
-        onSearchChange={setSearch}
-        cityId={cityId}
-        onCityIdChange={setCityId}
-        status={status}
-        onStatusChange={setStatus}
-      />
+      <EventsFilters onSearchChange={setSearch} onCityIdChange={setCityId} status={status} onStatusChange={setStatus} />
 
       {isLoading && <p>Carregando...</p>}
       {isError && <p>Não foi possível carregar os eventos.</p>}
 
       {data && (
         <>
-          <EventsTable events={data.data} />
+          <EventsTable events={data.data} onDeactivate={handleDeactivate} onReactivate={handleReactivate} />
           <Pagination
             currentPage={data.meta.current_page}
             lastPage={data.meta.last_page}

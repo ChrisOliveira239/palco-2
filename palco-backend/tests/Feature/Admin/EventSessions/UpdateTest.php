@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\EventSessions;
+namespace Tests\Feature\Admin\EventSessions;
 
 use App\Models\EventSession;
 use App\Models\User;
@@ -18,7 +18,7 @@ class UpdateTest extends TestCase
         $session = EventSession::factory()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->putJson("/api/event-sessions/{$session->id}", [
+        $response = $this->putJson("/api/admin/event-sessions/{$session->id}", [
             'start_at' => now()->addDays(3)->toDateTimeString(),
             'end_at' => null,
             'pricing_type' => 'fixed',
@@ -38,7 +38,7 @@ class UpdateTest extends TestCase
         $admin = User::factory()->admin()->create();
         Sanctum::actingAs($admin);
 
-        $response = $this->putJson('/api/event-sessions/999999', [
+        $response = $this->putJson('/api/admin/event-sessions/999999', [
             'start_at' => now()->addDays(3)->toDateTimeString(),
             'pricing_type' => 'free',
         ]);
@@ -52,11 +52,23 @@ class UpdateTest extends TestCase
         $session = EventSession::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->putJson("/api/event-sessions/{$session->id}", [
+        $response = $this->putJson("/api/admin/event-sessions/{$session->id}", [
             'start_at' => now()->addDays(3)->toDateTimeString(),
             'pricing_type' => 'free',
         ]);
 
         $response->assertStatus(403);
+    }
+
+    public function test_unauthenticated_cannot_update_event_session(): void
+    {
+        $session = EventSession::factory()->create();
+
+        $response = $this->putJson("/api/admin/event-sessions/{$session->id}", [
+            'start_at' => now()->addDays(3)->toDateTimeString(),
+            'pricing_type' => 'free',
+        ]);
+
+        $response->assertStatus(401);
     }
 }

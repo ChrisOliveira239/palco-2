@@ -77,3 +77,13 @@ export function updateEvent(id: number, values: EventFormValues) {
     .put<{ data: EventApiResponse }>(`/admin/events/${id}`, toPayload(values))
     .then((response) => toEvent(response.data.data))
 }
+
+export function deactivateEvent(id: number) {
+  return apiClient.delete(`/admin/events/${id}`)
+}
+
+export function reactivateEvent(id: number) {
+  return apiClient
+    .post<{ data: EventApiResponse }>(`/admin/events/${id}/restore`)
+    .then((response) => toEvent(response.data.data))
+}

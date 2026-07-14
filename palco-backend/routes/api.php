@@ -27,16 +27,12 @@ Route::prefix('events')->group(function () {
     Route::get('/{event}/sessions', [EventSessionController::class, 'index']);
 
     Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/{event}/sessions', [EventSessionController::class, 'store']);
         Route::post('/{event}/favorite', [EventFavoriteController::class, 'store']);
         Route::delete('/{event}/favorite', [EventFavoriteController::class, 'destroy']);
     });
 });
 
 Route::prefix('event-sessions')->middleware('auth:sanctum')->group(function () {
-    Route::put('/{eventSession}', [EventSessionController::class, 'update']);
-    Route::delete('/{eventSession}', [EventSessionController::class, 'destroy']);
-
     Route::get('/{eventSession}/tickets', [TicketController::class, 'index']);
     Route::post('/{eventSession}/tickets', [TicketController::class, 'store']);
     Route::post('/{eventSession}/tickets/manual', [TicketController::class, 'storeManual']);

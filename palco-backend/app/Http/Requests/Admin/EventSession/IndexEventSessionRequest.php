@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\EventSession;
+namespace App\Http\Requests\Admin\EventSession;
 
 use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DestroyEventSessionRequest extends FormRequest
+class IndexEventSessionRequest extends FormRequest
 {
     public function authorize(): bool
     {

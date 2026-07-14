@@ -14,6 +14,8 @@ export function EventFormPage() {
   const updateEvent = useUpdateEvent(eventId ?? 0)
 
   const mutation = isEditing ? updateEvent : createEvent
+  const fieldErrors = mutation.error?.response?.data.errors
+  const hasFieldErrors = fieldErrors !== undefined && Object.keys(fieldErrors).length > 0
 
   function handleSubmit(values: EventFormValues) {
     mutation.mutate(values, {
@@ -48,10 +50,11 @@ export function EventFormPage() {
       <h1 className="mb-4 text-xl font-semibold">{isEditing ? 'Editar evento' : 'Novo evento'}</h1>
       <EventForm
         initialValues={initialValues}
+        initialCity={event?.city}
         onSubmit={handleSubmit}
         isSubmitting={mutation.isPending}
-        errorMessage={mutation.error?.response?.data.message}
-        fieldErrors={mutation.error?.response?.data.errors}
+        errorMessage={hasFieldErrors ? undefined : mutation.error?.response?.data.message}
+        fieldErrors={fieldErrors}
       />
     </div>
   )
