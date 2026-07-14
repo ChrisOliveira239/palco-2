@@ -22,11 +22,16 @@ export function useCreateEventSession(eventId: number) {
   })
 }
 
-export function useUpdateEventSession(eventId: number, id: number) {
+type UpdateEventSessionVariables = {
+  id: number
+  values: EventSessionFormValues
+}
+
+export function useUpdateEventSession(eventId: number) {
   const queryClient = useQueryClient()
 
-  return useMutation<EventSession, AxiosError<EventSessionFormErrorResponse>, EventSessionFormValues>({
-    mutationFn: (values) => updateEventSession(id, values),
+  return useMutation<EventSession, AxiosError<EventSessionFormErrorResponse>, UpdateEventSessionVariables>({
+    mutationFn: ({ id, values }) => updateEventSession(id, values),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin', 'events', eventId, 'sessions'] })
     },

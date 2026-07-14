@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { EventSessionsSection } from '../../eventSessions/components/EventSessionsSection'
 import { useCreateEvent, useEvent, useUpdateEvent } from '../hooks'
 import type { EventFormValues } from '../types'
 import { EventForm } from './EventForm'
@@ -19,7 +20,7 @@ export function EventFormPage() {
 
   function handleSubmit(values: EventFormValues) {
     mutation.mutate(values, {
-      onSuccess: () => navigate('/eventos'),
+      onSuccess: (created) => navigate(isEditing ? '/eventos' : `/eventos/${created.id}/editar`),
     })
   }
 
@@ -56,6 +57,7 @@ export function EventFormPage() {
         errorMessage={hasFieldErrors ? undefined : mutation.error?.response?.data.message}
         fieldErrors={fieldErrors}
       />
+      {isEditing && <EventSessionsSection eventId={eventId} />}
     </div>
   )
 }
