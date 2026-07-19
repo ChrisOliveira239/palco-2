@@ -4,6 +4,7 @@ namespace Tests\Unit\Actions\Auth;
 
 use App\Actions\Auth\RegisterUser;
 use App\Enums\UserRole;
+use App\Models\City;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
@@ -14,10 +15,13 @@ class RegisterUserTest extends TestCase
 
     public function test_handle_creates_user_with_hashed_password_and_default_role(): void
     {
-        $result = (new RegisterUser())->handle([
+        $city = City::factory()->create();
+
+        $result = app(RegisterUser::class)->handle([
             'name' => 'Christian',
             'email' => 'christian@example.com',
             'password' => 'password123',
+            'city_ids' => [$city->id],
         ]);
 
         $this->assertArrayHasKey('user', $result);
